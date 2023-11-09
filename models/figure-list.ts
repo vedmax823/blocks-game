@@ -18,12 +18,19 @@ export class FigureList{
             this.figureArr.push(new Figure())
     }
 
+    createEmptyFigureList(){
+        this.figureArr.splice(0,this.figureArr.length);
+        for(let i =0; i< 3; i++)
+            this.figureArr.push(undefined)
+    }
+
     removeObj(obj : Figure){
         const myIndex = this.figureArr.indexOf(obj)
         if (myIndex !== -1) {
             this.figureArr[myIndex] = undefined;
         }
-        this.checkEmpty() && this.createNewFigureList()
+        this.checkEmpty() && this.createEmptyFigureList()
+        // this.checkEmpty() && this.createNewFigureList()
     }
 
     checkEmpty():boolean{

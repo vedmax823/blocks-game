@@ -13,6 +13,8 @@ interface FigureListStore {
 function createFigureList() : FigureList{
   if (typeof window !== 'undefined') {
     // Perform localStorage action
+
+    
     const localFigureList = localStorage.getItem('figureList')
     if (!localFigureList) return new FigureList()
     const JSONlocalFigureList = JSON.parse(localFigureList)

@@ -66,12 +66,18 @@ const MovingFigure: FC<MovingFigureProps> = ({ movingFigure, mouseCoords, destou
     }
   };
 
+  // const handleTouchMove = (e : React.TouchEvent) => {
+  //   console.log(e.touches[0].pageX, e.touches[0].pageY)
+  // }
+
   
   return (
     <div
       className="absolute flex justify-center items-center"
       style={{ top: `${mouseCoords.top}px`, left: `${mouseCoords.left}px` }}
       onMouseUp={handleMouseUp}
+      // onTouchMove={e => handleTouchMove(e)}
+
     >
       <OneFigureComponent
         canMove={movingFigure.canMove}

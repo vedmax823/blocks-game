@@ -29,6 +29,8 @@ const MainBlock = () => {
   const [openModal, setOpenModal] = useState(false);
   const refField = useRef<HTMLDivElement>(null);
   const [movingFigure, setMovingFigure] = useState<Figure>();
+
+
   const [mouseCoords, setMouseCoords] = useState<FieldLeftTopType>({
     top: 0,
     left: 0,
@@ -82,16 +84,64 @@ const MainBlock = () => {
     handleOpenModal();
   };
 
-  const mouseMoveHandle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (movingFigure) {
-      setMouseCoords(() => {
-        return {
-          top: Math.round(e.pageY - movingFigure.hheight / 2),
-          left: Math.round(e.pageX - movingFigure.width / 2),
-        };
-      });
+
+  // const mouseMoveHandle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  //   if (movingFigure) {
+  //     setMouseCoords(() => {
+  //       return {
+  //         top: Math.round(e.pageY - movingFigure.hheight / 2),
+  //         left: Math.round(e.pageX - movingFigure.width / 2),
+  //       };
+  //     });
+  //   }
+  // };
+  
+
+  const mouseMoveHandle = (event: React.SyntheticEvent) => {
+    event.persist();
+    // event.preventDefault()
+    // console.log('event ', event);
+    if (event.nativeEvent instanceof TouchEvent) {
+        // console.log(event.nativeEvent.touches);
+        if (movingFigure) {
+          console.log(event.type)
+          console.log(event.nativeEvent.touches[0].pageX)
+          console.log(event.nativeEvent.touches[0].pageY)
+          // console.log(event.nativeEvent.pageY)
+          
+          setMouseCoords({
+              top: Math.round(event.nativeEvent.touches[0].pageY - movingFigure.hheight / 2),
+              left: Math.round(event.nativeEvent.touches[0].pageX - movingFigure.width / 2),
+          }) 
+
+          // setMouseCoords({
+          //     top: Math.round(event.nativeEvent.touches[0].pageY),
+          //     left: Math.round(event.nativeEvent.touches[0].pageX),
+          // }) 
+        }
+        
+    }
+
+    if (event.nativeEvent instanceof MouseEvent) {
+        // console.log(event.nativeEvent.screenX);
+        if (movingFigure) {
+
+          console.log(event.nativeEvent.pageX)
+          console.log(event.nativeEvent.pageY)
+          
+          setMouseCoords({
+              top: Math.round(event.nativeEvent.pageY - movingFigure.hheight / 2),
+              left: Math.round(event.nativeEvent.pageX - movingFigure.width / 2),
+          }) 
+        }
     }
   };
+
+  // const onTouchStartHandler = (e : React.TouchEvent) => {
+  //   console.log(e.nativeEvent.touches[0].clientX, e.nativeEvent.touches[0].clientY)
+  // }
+
+
 
   useEffect(() => {
     let wasChanged: boolean = false;
@@ -107,6 +157,13 @@ const MainBlock = () => {
       return acc;
     }, 0);
 
+    const countEmptyFigures = figureList.figureList.figureArr.reduce((acc, item) => {
+      if (!item) return acc + 1;
+      return acc;
+    }, 0);
+
+    
+
     if (wasChanged) {
       const newFigureList = new FigureList();
       newFigureList.figureArr = figureList.figureList.figureArr;
@@ -117,7 +174,12 @@ const MainBlock = () => {
       if (countFigures == 3) {
         const newFigureList = new FigureList();
         figureList.setFigureList(newFigureList);
-      } else {
+      } 
+      else if (countEmptyFigures == 3){
+        const newFigureList = new FigureList();
+        figureList.setFigureList(newFigureList);
+      }
+      else {
         setIsGameOver(() => true);
       }
     }
@@ -127,6 +189,10 @@ const MainBlock = () => {
     if (isGameOver) handleOpenModal();
   }, [isGameOver]);
 
+  useEffect(() => {
+    console.log(movingFigure)
+  }, [movingFigure])
+
   if (!isMounted) return null;
 
   return (
@@ -135,32 +201,34 @@ const MainBlock = () => {
         className="flex w-full flex-col"
         ref={refField}
         onMouseMove={(e) => mouseMoveHandle(e)}
+        // onTouchMove={(e) => mouseMoveHandle(e)}
+        // onTouchStart={(e) => onTouchStartHandler(e)}
       >
-        <div className="fixed w-32 right-3">
-          <div className="flex justify-center flex-col bg-yellow-400  rounded-lg">
+        <div className="relative md:fixed md:right-3 flex md:flex-col w-full md:w-32 justify-center gap-2 mb-3 items-center">
+          <div className="flex justify-center md:flex-col bg-yellow-400  rounded-lg w-28 gap-2 md:gap-0">
             <div className="flex justify-center">
-              <h3>Best score</h3>
+              <h3>Best : </h3>
             </div>
             <div className="flex justify-center">
-              <h1>{bestScore}</h1>
-            </div>
-          </div>
-          <div className="flex justify-center flex-col bg-yellow-400/50 rounded-lg">
-            <div className="flex justify-center">
-              <h3>Score</h3>
-            </div>
-            <div className="flex justify-center">
-              <h1>{score ? score : 0}</h1>
+              <p> {bestScore} </p>
             </div>
           </div>
-          <div className="flex justify-center mt-2">
-            <Button onClick={handleNewGame}>New game</Button>
+          <div className="flex justify-center md:flex-col bg-yellow-400/50 rounded-lg w-28 gap-2 md:gap-0">
+            <div className="flex justify-center">
+              <p>Score : </p>
+            </div>
+            <div className="flex justify-center">
+              <p>{score}</p>
+            </div>
+          </div>
+          <div className="flex justify-center w-32">
+            <Button onClick={handleNewGame} className="py-0 md:py-2">New game</Button>
           </div>
         </div>
         <div className="flex justify-center">
           <BoardComponent />
         </div>
-        <div className="flex justify-center mt-5">
+        <div className="flex justify-center md:mt-5">
           <BlockElements handleOnDownFigure={handleOnDownFigure} />
         </div>
         {movingFigure && mouseCoords && (
