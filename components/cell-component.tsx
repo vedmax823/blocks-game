@@ -21,11 +21,9 @@ const CellComponents : FC<CellProps> = ({cell}) => {
 
     return (
         <div
-            // className={['cell', cell.isEmpty ? '' : 'cell_full'].join(' ')}
             className={cn('aspect-square border-amber-600 border border-collapse', bgClass)}
             style={{width : '3vw', minWidth: '35px'}}
             ref={cellRef}
-            //onMouseUp={() => console.log(cell)}
         >
         </div>
     );

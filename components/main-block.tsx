@@ -85,49 +85,10 @@ const MainBlock = () => {
   };
 
 
-  // const mouseMoveHandle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-  //   if (movingFigure) {
-  //     setMouseCoords(() => {
-  //       return {
-  //         top: Math.round(e.pageY - movingFigure.hheight / 2),
-  //         left: Math.round(e.pageX - movingFigure.width / 2),
-  //       };
-  //     });
-  //   }
-  // };
-  
-
   const mouseMoveHandle = (event: React.SyntheticEvent) => {
     event.persist();
-    // event.preventDefault()
-    // console.log('event ', event);
-    if (event.nativeEvent instanceof TouchEvent) {
-        // console.log(event.nativeEvent.touches);
-        if (movingFigure) {
-          console.log(event.type)
-          console.log(event.nativeEvent.touches[0].pageX)
-          console.log(event.nativeEvent.touches[0].pageY)
-          // console.log(event.nativeEvent.pageY)
-          
-          setMouseCoords({
-              top: Math.round(event.nativeEvent.touches[0].pageY - movingFigure.hheight / 2),
-              left: Math.round(event.nativeEvent.touches[0].pageX - movingFigure.width / 2),
-          }) 
-
-          // setMouseCoords({
-          //     top: Math.round(event.nativeEvent.touches[0].pageY),
-          //     left: Math.round(event.nativeEvent.touches[0].pageX),
-          // }) 
-        }
-        
-    }
-
     if (event.nativeEvent instanceof MouseEvent) {
-        // console.log(event.nativeEvent.screenX);
         if (movingFigure) {
-
-          console.log(event.nativeEvent.pageX)
-          console.log(event.nativeEvent.pageY)
           
           setMouseCoords({
               top: Math.round(event.nativeEvent.pageY - movingFigure.hheight / 2),
@@ -136,12 +97,6 @@ const MainBlock = () => {
         }
     }
   };
-
-  // const onTouchStartHandler = (e : React.TouchEvent) => {
-  //   console.log(e.nativeEvent.touches[0].clientX, e.nativeEvent.touches[0].clientY)
-  // }
-
-
 
   useEffect(() => {
     let wasChanged: boolean = false;
@@ -189,9 +144,6 @@ const MainBlock = () => {
     if (isGameOver) handleOpenModal();
   }, [isGameOver]);
 
-  useEffect(() => {
-    console.log(movingFigure)
-  }, [movingFigure])
 
   if (!isMounted) return null;
 
@@ -201,8 +153,6 @@ const MainBlock = () => {
         className="flex w-full flex-col"
         ref={refField}
         onMouseMove={(e) => mouseMoveHandle(e)}
-        // onTouchMove={(e) => mouseMoveHandle(e)}
-        // onTouchStart={(e) => onTouchStartHandler(e)}
       >
         <div className="relative md:fixed md:right-3 flex md:flex-col w-full md:w-32 justify-center gap-2 mb-3 items-center">
           <div className="flex justify-center md:flex-col bg-yellow-400  rounded-lg w-28 gap-2 md:gap-0">
